@@ -1,2 +1,2 @@
 # Customer_Churn
-for SaaS based company
+for OTT platforms
