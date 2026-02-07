@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 Customer Churn — OTT Lifestyle
 ================================
 
