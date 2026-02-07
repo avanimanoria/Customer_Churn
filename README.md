@@ -114,6 +114,3 @@ This project turns churn prediction from a one‑off notebook into a **repeatabl
 
 By wiring `high_risk_customers_uipath.csv` into your CRM, marketing automation, or UiPath bots, the OTT platform can systematically reduce churn, protect lifetime value, and continuously experiment with interventions—closing the Friday‑night leak one high‑risk customer at a time. 
 =======
-# Customer_Churn
-for OTT platforms
->>>>>>> 97893d4d9c021f933689c6a73be808cffcbf3071
