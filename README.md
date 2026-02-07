@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Customer Churn — OTT Lifestyle
 ================================
 
@@ -112,3 +113,7 @@ Implementation‑Ready Business Conclusion
 This project turns churn prediction from a one‑off notebook into a **repeatable retention engine**: on a daily or weekly schedule, you can regenerate high‑risk customer lists and immediately trigger precise, segment‑wise actions instead of blanket discounts. Price‑sensitive students flagged as “too expensive” can receive targeted plan offers, users with “technical issues” can be auto‑assigned to proactive support, and “no time to watch” customers can get concise, personalized content suggestions rather than generic promos.
 
 By wiring `high_risk_customers_uipath.csv` into your CRM, marketing automation, or UiPath bots, the OTT platform can systematically reduce churn, protect lifetime value, and continuously experiment with interventions—closing the Friday‑night leak one high‑risk customer at a time. 
+=======
+# Customer_Churn
+for OTT platforms
+>>>>>>> 97893d4d9c021f933689c6a73be808cffcbf3071
