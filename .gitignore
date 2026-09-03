@@ -1,0 +1,24 @@
+# Python environment and cache
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# Generated model artifacts
+*.pkl
+
+# Generated project data and scoring outputs
+ott_churn_lifestyle_dataset.csv
+ott_churn_lifestyle_fe.csv
+churn_scored.csv
+high_risk_customers.csv
+retention_outreach_candidates.csv
+
+# Generated experiment artifacts
+results/*.json
+results/*.csv
+results/*.png
+
+# OS and editor files
+.DS_Store
+.vscode/

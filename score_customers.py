@@ -9,7 +9,14 @@ model = joblib.load("churn_model.pkl")
 
 # 3. Prepare features (X) the same way as during training
 #    Drop target and any columns you don't want as inputs
-X = df.drop(columns=["churn", "churn_reason"])
+LEAKAGE_COLUMNS = [
+    "customer_id",
+    "churn",
+    "simulated_churn_probability",
+    "simulated_churn_reason",
+]
+
+X = df.drop(columns=LEAKAGE_COLUMNS)
 
 # 4. Predict churn probabilities and labels for all customers
 churn_prob = model.predict_proba(X)[:, 1]   # probability of churn = 1
@@ -19,8 +26,7 @@ churn_pred = model.predict(X)               # predicted class: 0 or 1
 scored_df = pd.DataFrame({
     "customer_id": df["customer_id"],
     "churn_prob": churn_prob,
-    "churn_pred": churn_pred,
-    "churn_reason": df["churn_reason"],
+    "churn_pred_default_050": churn_pred,
     "user_type": df["user_type"],
     "plan": df["plan"],
     "net_quality": df["net_quality"],

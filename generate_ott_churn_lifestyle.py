@@ -1,7 +1,10 @@
 import numpy as np
 import pandas as pd
 import random
+RANDOM_SEED = 42
 
+random.seed(RANDOM_SEED)
+np.random.seed(RANDOM_SEED)
 N = 10000 #total number of rows i want in my dataset
 
 user = ["school student", "college student", "working professional", "retired individual"]
@@ -9,7 +12,13 @@ devices = ["phone", "tablet", "laptop", "smart TV", "other device"]
 internet_level = ["low", "medium", "high"]
 plan_types = ["basic", "standard", "premium"]
 city = ["tier 1", "tier 2", "tier 3"]
-churn_reason = ["too expensive", "no time to watch", "lack content/content not good", "technical issues", "switching to competitor"]
+simulated_churn_reasons = [
+    "too_expensive",
+    "low_engagement",
+    "technical_issues",
+    "competitor_switch",
+    "content_dissatisfaction",
+]
 lifestyle = ["binge watcher", "casual viewer", "family viewer", "sports enthusiast", "news junkie"] 
 
 data = [] #empty dictionary to hold data
@@ -17,7 +26,9 @@ data = [] #empty dictionary to hold data
 #for each customer
 for i in range(N):
     customer_id = f"CUST_{i+1:05d}" #unique customer id
-    user_type = random.choices(user, weights=[0.15, 0.5, 0.3, 0.3])[0]
+    user_type = random.choices(
+    user,
+    weights=[0.10, 0.40, 0.35, 0.15],)[0]
 
     if user_type == "school student":
         age = np.random.randint(10, 18)
@@ -73,72 +84,72 @@ for i in range(N):
     days_since_last_login = np.random.randint(0, 60)
     num_support_tickets_last_3m = np.random.poisson(0.5)#how many times user contacted support in last 3 months
 
-    churn_score = 0
+    # Synthetic churn-risk model.
+# Higher values increase churn probability; the intercept keeps churn
+# near a realistic minority rate for this simulated use case.
+    logit = -2.0
 
-
+    # Short-tenure customers are more likely to leave.
     if tenure_months < 3:
-        churn_score += 0.8
-    elif tenure_months < 6: 
-        churn_score += 0.4
+        logit += 0.90
+    elif tenure_months < 6:
+        logit += 0.45
 
+    # More platforms can increase subscription cost/choice pressure.
     if number_of_platforms >= 3:
-        churn_score += 0.9
+        logit += 0.50
     elif number_of_platforms == 2:
-        churn_score += 0.5
-    else:
-        churn_score += 0.1
+        logit += 0.20
 
+    # Low engagement and limited free time can increase cancellation risk.
     if daily_free_hours < 1:
-        churn_score += 0.9
+        logit += 0.70
     elif daily_free_hours < 3:
-        churn_score += 0.5
-    else:
-        churn_score += 0.3
+        logit += 0.25
 
+    # Poor connectivity hurts the streaming experience.
     if net_quality == "low":
-        churn_score += 0.8
+        logit += 0.75
     elif net_quality == "medium":
-        churn_score += 0.4  
-    else:
-        churn_score += 0.1
+        logit += 0.25
 
+    # Inactivity is a strong churn signal.
     if days_since_last_login > 30:
-        churn_score += 0.8
+        logit += 0.90
     elif days_since_last_login > 15:
-        churn_score += 0.4      
-    else:
-        churn_score += 0.1
+        logit += 0.35
 
-    if auto_renewable_enabled == False:
-        churn_score += 0.7
+    # Auto-renewal reduces accidental/non-intentional churn.
+    if not auto_renewable_enabled:
+        logit += 0.60
     else:
-        churn_score += 0.2
+        logit -= 0.20
 
+    # Multiple support tickets can indicate unresolved issues.
     if num_support_tickets_last_3m > 3:
-        churn_score += 0.7  
+        logit += 0.60
     elif num_support_tickets_last_3m > 1:
-        churn_score += 0.4  
-    else:
-        churn_score += 0.1
+        logit += 0.25
 
-    churn_score -= 1.0
+    # Add noise so labels are not deterministic.
+    logit += np.random.normal(0, 0.50)
 
-    churn_prob = 1 / (1 + np.exp(-churn_score))
-    churn = np.random.binomial(1, churn_prob)
+    churn_probability_simulated = 1 / (1 + np.exp(-logit))
+    churn = np.random.binomial(1, churn_probability_simulated)
 
     if churn == 1:
         if monthly_fee > 600 or number_of_platforms >= 3:
-            churn_reason = "too expensive"
+            simulated_churn_reason = "too expensive"
         elif daily_free_hours < 2 or avg_ott_hours_per_day < 1:
-            churn_reason = "no time to watch"
+            simulated_churn_reason = "no time to watch"
         elif net_quality in ["low", "medium"]:
-            churn_reason = "technical issues"
+            simulated_churn_reason = "technical issues"
         elif tenure_months >= 12:
-            churn_reason = "switched to competitor"
+            simulated_churn_reason = "switched to competitor"
         else:
-            churn_reason = "content not interesting"
+            simulated_churn_reason = "content not interesting"
     else:
-        churn_reason = "none"
+        simulated_churn_reason = "none"
 
     row = {
         
@@ -157,10 +168,9 @@ for i in range(N):
         "auto_renewable_enabled": auto_renewable_enabled,
         "days_since_last_login": days_since_last_login,
         "num_support_tickets_last_3m": num_support_tickets_last_3m,
-        "churn_score": churn_score,
-        "churn_prob": churn_prob,
+        "simulated_churn_probability": churn_probability_simulated,
         "churn": churn,
-        "churn_reason": churn_reason,
+        "simulated_churn_reason": simulated_churn_reason,
         "lifestyle": random.choice(lifestyle)}
 
     data.append(row)

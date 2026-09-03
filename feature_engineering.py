@@ -20,5 +20,16 @@ df["engagement_ratio"] = np.where(
 # Clipping engagement_ratio to [0, 1] just to keep it interpretable
 df["engagement_ratio"] = df["engagement_ratio"].clip(0, 1)
 
+assert df["number_of_platforms"].gt(0).all()
+assert df["engagement_ratio"].between(0, 1).all()
+assert df["customer_id"].is_unique
+assert df["churn"].isin([0, 1]).all()
+
+print("Data validation passed.")
+print("\nChurn distribution:")
+print(df["churn"].value_counts())
+print("\nChurn percentage:")
+print((df["churn"].value_counts(normalize=True) * 100).round(2))
+
 # Saving the enhanced dataset
 df.to_csv("ott_churn_lifestyle_fe.csv", index=False)
